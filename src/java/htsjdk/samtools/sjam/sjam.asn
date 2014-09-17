@@ -1,0 +1,86 @@
+SJAM DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+SamRecord ::= [APPLICATION 0] IMPLICIT SEQUENCE {
+	header Header OPTIONAL,
+	alignment [0] IMPLICIT SEQUENCE OF Alignment
+}
+
+Header ::= [APPLICATION 1] IMPLICIT SEQUENCE {
+	headerLine HeaderLine OPTIONAL,
+	sequenceDictionary [0] IMPLICIT SEQUENCE OF SequenceDictionary OPTIONAL,
+	readGroup [1] IMPLICIT SEQUENCE OF ReadGroup OPTIONAL,
+	program [2] IMPLICIT SEQUENCE OF Program OPTIONAL,
+	textComment [3] IMPLICIT SEQUENCE OF VisibleString OPTIONAL
+}
+
+HeaderLine ::= [APPLICATION 2] IMPLICIT SEQUENCE {
+	version VisibleString,
+	sortingOrder SortingOrder OPTIONAL
+}
+
+SortingOrder ::= CHOICE {
+	unknown	INTEGER(0),
+	unsorted INTEGER(1),
+	queryname INTEGER(2),
+	coordinate INTEGER(3)
+}
+
+SequenceDictionary ::= [APPLICATION 3] IMPLICIT SEQUENCE {
+	sequenceName VisibleString,
+	sequenceLength INTEGER(1..2147483647),
+	assemblyIdentifier VisibleString OPTIONAL,
+	checksum OCTET STRING OPTIONAL,
+	species VisibleString OPTIONAL,
+	uri VisibleString OPTIONAL
+}
+
+ReadGroup ::= [APPLICATION 4] IMPLICIT SEQUENCE {
+	identifier VisibleString,
+	centerName VisibleString OPTIONAL,
+	description VisibleString OPTIONAL,
+	date VisibleString OPTIONAL,
+	flowOrder VisibleString OPTIONAL,
+	keySequence VisibleString OPTIONAL,
+	library VisibleString OPTIONAL,
+	program VisibleString OPTIONAL,
+	predictedMedianInsertSize INTEGER(1..1000) OPTIONAL,
+	platform Platform OPTIONAL,
+	platformUnit VisibleString OPTIONAL,
+	sample VisibleString OPTIONAL
+}
+
+Platform ::= CHOICE {
+	capillary INTEGER(0),
+	ls454 INTEGER(1),
+	illumina INTEGER(2),
+	solid INTEGER(3),
+	helicos INTEGER(4),
+	iontorrent INTEGER(5),
+	pacbio INTEGER(6)
+}
+
+Program ::= [APPLICATION 5] IMPLICIT SEQUENCE {
+	identifier VisibleString,
+	programName VisibleString OPTIONAL,
+	commandLine VisibleString OPTIONAL,
+	previousPgTag VisibleString OPTIONAL,
+	description VisibleString OPTIONAL,
+	programVersion VisibleString OPTIONAL
+}
+
+Alignment ::= [APPLICATION 6] IMPLICIT SEQUENCE {
+	qname VisibleString,
+	flag INTEGER(0..65535),
+	rname VisibleString,
+	pos INTEGER(0..2147483647),
+	mapq INTEGER(0..255),
+	cigar VisibleString,
+	rnext VisibleString,
+	pnext INTEGER(0..2147483647),
+	tlen INTEGER(-2147483647..2147483647),
+	seq  VisibleString,
+	qual VisibleString
+}
+
+END
