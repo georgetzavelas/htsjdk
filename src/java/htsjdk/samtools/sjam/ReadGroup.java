@@ -7,7 +7,7 @@ package htsjdk.samtools.sjam;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.LinkedList;
+import java.util.LinkedList; 
 import org.openmuc.jasn1.ber.*;
 import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
