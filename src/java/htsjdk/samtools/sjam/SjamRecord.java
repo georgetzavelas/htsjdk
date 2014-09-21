@@ -6,13 +6,14 @@ package htsjdk.samtools.sjam;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.LinkedList;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+import java.util.List;
 
-public final class SamRecord {
+import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.BerIdentifier;
+import org.openmuc.jasn1.ber.BerLength;
+
+public final class SjamRecord {
 
 	public final static class SubSeqOf_alignment {
 
@@ -102,16 +103,16 @@ public final class SamRecord {
 
 	public SubSeqOf_alignment alignment = null;
 
-	public SamRecord() {
+	public SjamRecord() {
 		id = identifier;
 	}
 
-	public SamRecord(byte[] code) {
+	public SjamRecord(byte[] code) {
 		id = identifier;
 		this.code = code;
 	}
 
-	public SamRecord(Header header, SubSeqOf_alignment alignment) {
+	public SjamRecord(Header header, SubSeqOf_alignment alignment) {
 		id = identifier;
 		this.header = header;
 		this.alignment = alignment;
