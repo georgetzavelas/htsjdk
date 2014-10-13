@@ -24,11 +24,12 @@
 package htsjdk.samtools;
 
 import htsjdk.samtools.util.CloseableIterator;
+
+import java.io.File;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.io.File;
 
 /**
  * Test that BAM writing doesn't blow up.  For presorted writing, the resulting BAM file is read and contents are
@@ -55,7 +56,7 @@ public class BAMFileWriterTest {
     private void testHelper(final SAMRecordSetBuilder samRecordSetBuilder, final SAMFileHeader.SortOrder sortOrder, final boolean presorted) throws Exception {
         SAMFileReader samReader = samRecordSetBuilder.getSamReader();
         final File bamFile = File.createTempFile("test.", BamFileIoUtils.BAM_FILE_EXTENSION);
-        bamFile.deleteOnExit();
+//        bamFile.deleteOnExit();
         samReader.getFileHeader().setSortOrder(sortOrder);
         final SAMFileWriter bamWriter = new SAMFileWriterFactory().makeSAMOrBAMWriter(samReader.getFileHeader(), presorted, bamFile);
         CloseableIterator<SAMRecord> it = samReader.iterator();

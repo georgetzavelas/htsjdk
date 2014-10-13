@@ -11,3 +11,4 @@ intellij.classes
 
 /bin
 /htsjdk.version.property.xml
+/test-output/

@@ -33,13 +33,6 @@ import htsjdk.samtools.util.CloseableIterator;
 import htsjdk.samtools.util.CloserUtil;
 import htsjdk.samtools.util.IOUtil;
 import htsjdk.samtools.util.RuntimeIOException;
-import htsjdk.samtools.util.BlockCompressedInputStream;
-import htsjdk.samtools.util.BlockCompressedStreamConstants;
-import htsjdk.samtools.util.CloseableIterator;
-import htsjdk.samtools.util.CloserUtil;
-import htsjdk.samtools.util.CoordMath;
-import htsjdk.samtools.util.IOUtil;
-import htsjdk.samtools.util.RuntimeIOException;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -48,13 +41,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -127,17 +115,17 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * Implemented as an abstract class to enforce better access control.
      */
     public static abstract class ReaderImplementation implements PrimitiveSamReader {
-        abstract void enableFileSource(final SamReader reader, final boolean enabled);
+        public abstract void enableFileSource(final SamReader reader, final boolean enabled);
 
-        abstract void enableIndexCaching(final boolean enabled);
+        public abstract void enableIndexCaching(final boolean enabled);
 
-        abstract void enableIndexMemoryMapping(final boolean enabled);
+        public abstract void enableIndexMemoryMapping(final boolean enabled);
 
-        abstract void enableCrcChecking(final boolean enabled);
+        public abstract void enableCrcChecking(final boolean enabled);
 
-        abstract void setSAMRecordFactory(final SAMRecordFactory factory);
+        public abstract void setSAMRecordFactory(final SAMRecordFactory factory);
 
-        abstract void setValidationStringency(final ValidationStringency validationStringency);
+        public abstract void setValidationStringency(final ValidationStringency validationStringency);
     }
 
 
@@ -235,7 +223,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
         init(strm, indexStream, eagerDecode, defaultValidationStringency);
     }
 
-    public void close() {
+    @Override
+	public void close() {
         if (mReader != null) {
             mReader.close();
         }
@@ -302,7 +291,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
     /**
      * @return true if ths is a BAM file, and has an index
      */
-    public boolean hasIndex() {
+    @Override
+	public boolean hasIndex() {
         return mReader.hasIndex();
     }
 
@@ -316,7 +306,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *
      * @return An index of the given type.
      */
-    public BAMIndex getIndex() {
+    @Override
+	public BAMIndex getIndex() {
         return mReader.getIndex();
     }
 
@@ -326,7 +317,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *
      * @return True if the index supports the BrowseableBAMIndex interface.  False otherwise.
      */
-    public boolean hasBrowseableIndex() {
+    @Override
+	public boolean hasBrowseableIndex() {
         return hasIndex() && getIndex() instanceof BrowseableBAMIndex;
     }
 
@@ -337,14 +329,16 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @return An index with a browseable interface, if possible.
      * @throws SAMException if no such index is available.
      */
-    public BrowseableBAMIndex getBrowseableIndex() {
+    @Override
+	public BrowseableBAMIndex getBrowseableIndex() {
         final BAMIndex index = getIndex();
         if (!(index instanceof BrowseableBAMIndex))
             throw new SAMException("Cannot return index: index created by BAM is not browseable.");
         return BrowseableBAMIndex.class.cast(index);
     }
 
-    public SAMFileHeader getFileHeader() {
+    @Override
+	public SAMFileHeader getFileHeader() {
         return mReader.getFileHeader();
     }
 
@@ -370,7 +364,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * Only a single open iterator on a SAM or BAM file may be extant at any one time.  If you want to start
      * a second iteration, the first one must be closed first.
      */
-    public SAMRecordIterator iterator() {
+    @Override
+	public SAMRecordIterator iterator() {
         return new AssertingIterator(mReader.getIterator());
     }
 
@@ -380,7 +375,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @param chunks List of chunks for which to retrieve data.
      * @return An iterator over the given chunks.
      */
-    public SAMRecordIterator iterator(final SAMFileSpan chunks) {
+    @Override
+	public SAMRecordIterator iterator(final SAMFileSpan chunks) {
         return new AssertingIterator(mReader.getIterator(chunks));
     }
 
@@ -389,7 +385,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *
      * @return Unbounded pointer to the first record, in chunk format.
      */
-    public SAMFileSpan getFilePointerSpanningReads() {
+    @Override
+	public SAMFileSpan getFilePointerSpanningReads() {
         return mReader.getFilePointerSpanningReads();
     }
 
@@ -413,7 +410,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *                  interval of interest.  If false, the alignment of the returned SAMRecords need only overlap the interval of interest.
      * @return Iterator over the SAMRecords matching the interval.
      */
-    public SAMRecordIterator query(final String sequence, final int start, final int end, final boolean contained) {
+    @Override
+	public SAMRecordIterator query(final String sequence, final int start, final int end, final boolean contained) {
         final int referenceIndex = getFileHeader().getSequenceIndex(sequence);
         final CloseableIterator<SAMRecord> currentIterator;
         if (referenceIndex == -1) {
@@ -442,7 +440,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @param end      1-based, inclusive end of interval of interest. Zero implies end of the reference sequence.
      * @return Iterator over the SAMRecords overlapping the interval.
      */
-    public SAMRecordIterator queryOverlapping(final String sequence, final int start, final int end) {
+    @Override
+	public SAMRecordIterator queryOverlapping(final String sequence, final int start, final int end) {
         return query(sequence, start, end, false);
     }
 
@@ -463,7 +462,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @param end      1-based, inclusive end of interval of interest. Zero implies end of the reference sequence.
      * @return Iterator over the SAMRecords contained in the interval.
      */
-    public SAMRecordIterator queryContained(final String sequence, final int start, final int end) {
+    @Override
+	public SAMRecordIterator queryContained(final String sequence, final int start, final int end) {
         return query(sequence, start, end, true);
     }
 
@@ -491,7 +491,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *                  the intervals of interest.
      * @return Iterator over the SAMRecords matching the interval.
      */
-    public SAMRecordIterator query(final QueryInterval[] intervals, final boolean contained) {
+    @Override
+	public SAMRecordIterator query(final QueryInterval[] intervals, final boolean contained) {
         return new AssertingIterator(mReader.query(intervals, contained));
     }
 
@@ -515,7 +516,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *                  htsjdk.samtools.SAMFileReader.QueryInterval#optimizeIntervals(htsjdk.samtools.SAMFileReader.QueryInterval[])
      * @return Iterator over the SAMRecords overlapping any of the intervals.
      */
-    public SAMRecordIterator queryOverlapping(final QueryInterval[] intervals) {
+    @Override
+	public SAMRecordIterator queryOverlapping(final QueryInterval[] intervals) {
         return query(intervals, false);
     }
 
@@ -539,12 +541,14 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      *                  htsjdk.samtools.SAMFileReader.QueryInterval#optimizeIntervals(htsjdk.samtools.SAMFileReader.QueryInterval[])
      * @return Iterator over the SAMRecords contained in any of the intervals.
      */
-    public SAMRecordIterator queryContained(final QueryInterval[] intervals) {
+    @Override
+	public SAMRecordIterator queryContained(final QueryInterval[] intervals) {
         return query(intervals, true);
     }
 
 
-    public SAMRecordIterator queryUnmapped() {
+    @Override
+	public SAMRecordIterator queryUnmapped() {
         return new AssertingIterator(mReader.queryUnmapped());
     }
 
@@ -564,7 +568,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @param start    Alignment start of interest.
      * @return Iterator over the SAMRecords with the given alignment start.
      */
-    public SAMRecordIterator queryAlignmentStart(final String sequence, final int start) {
+    @Override
+	public SAMRecordIterator queryAlignmentStart(final String sequence, final int start) {
         return new AssertingIterator(mReader.queryAlignmentStart(sequence, start));
     }
 
@@ -582,7 +587,8 @@ public class SAMFileReader implements SamReader, SamReader.Indexing {
      * @param rec Record for which mate is sought.  Must be a paired read.
      * @return rec's mate, or null if it cannot be found.
      */
-    public SAMRecord queryMate(final SAMRecord rec) {
+    @Override
+	public SAMRecord queryMate(final SAMRecord rec) {
         if (!rec.getReadPairedFlag()) {
             throw new IllegalArgumentException("queryMate called for unpaired read.");
         }

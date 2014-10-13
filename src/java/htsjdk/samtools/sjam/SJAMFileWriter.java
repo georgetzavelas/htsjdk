@@ -11,7 +11,7 @@ class SJAMFileWriter implements Closeable {
 
     private final BinaryCodec outputBinaryCodec;
 
-    protected SJAMFileWriter(final File path) throws FileNotFoundException {
+    public SJAMFileWriter(final File path) throws FileNotFoundException {
         outputBinaryCodec = new BinaryCodec(path, true);
     }
 
@@ -29,9 +29,8 @@ class SJAMFileWriter implements Closeable {
         return outputBinaryCodec.getOutputFileName();
     }
 
-    public void writeRecord(final SjamRecord samRecord) {
-        // calculate and write the length of the SAM file header text and the header text
-        outputBinaryCodec.writeBytes(samRecord.code);
+    public void writeRecord(final SjamFileRecord sjamFileRecord) {
+        outputBinaryCodec.writeBytes(sjamFileRecord.code);
     }
 
 	@Override

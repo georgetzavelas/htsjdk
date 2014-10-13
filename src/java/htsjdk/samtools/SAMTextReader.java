@@ -76,23 +76,28 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
      * If true, writes the source of every read into the source SAMRecords.
      * @param enabled true to write source information into each SAMRecord.
      */
-    public void enableFileSource(final SamReader reader, final boolean enabled) {
+    @Override
+	public void enableFileSource(final SamReader reader, final boolean enabled) {
         this.mParentReader = enabled ? reader : null;
     }
 
-    void enableIndexCaching(final boolean enabled) {
+    @Override
+	public void enableIndexCaching(final boolean enabled) {
         throw new UnsupportedOperationException("Cannot enable index caching for a SAM text reader");
     }
 
-    void enableIndexMemoryMapping(final boolean enabled) {
+    @Override
+	public void enableIndexMemoryMapping(final boolean enabled) {
         throw new UnsupportedOperationException("Cannot enable index memory mapping for a SAM text reader");
     }
 
-    void enableCrcChecking(final boolean enabled) {
+    @Override
+	public void enableCrcChecking(final boolean enabled) {
         // Do nothing - this has no meaning for SAM reading
     }
 
-    void setSAMRecordFactory(final SAMRecordFactory factory) {
+    @Override
+	public void setSAMRecordFactory(final SAMRecordFactory factory) {
         this.samRecordFactory = factory;
     }
 
@@ -101,15 +106,18 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
         return SamReader.Type.SAM_TYPE;
     }
 
-    public boolean hasIndex() {
+    @Override
+	public boolean hasIndex() {
         return false;
     }
 
-    public BAMIndex getIndex() {
+    @Override
+	public BAMIndex getIndex() {
         throw new UnsupportedOperationException();
     }
 
-    public void close() {
+    @Override
+	public void close() {
         if (mReader != null) {
             try {
                 mReader.close();
@@ -119,15 +127,18 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
         }
     }
 
-    public SAMFileHeader getFileHeader() {
+    @Override
+	public SAMFileHeader getFileHeader() {
         return mFileHeader;
     }
 
-    public ValidationStringency getValidationStringency() {
+    @Override
+	public ValidationStringency getValidationStringency() {
         return validationStringency;
     }
 
-    public void setValidationStringency(final ValidationStringency stringency) {
+    @Override
+	public void setValidationStringency(final ValidationStringency stringency) {
         this.validationStringency = stringency;
     }
 
@@ -138,7 +149,8 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
      *
      * @return Iterator of SAMRecords in file order.
      */
-    public CloseableIterator<SAMRecord> getIterator() {
+    @Override
+	public CloseableIterator<SAMRecord> getIterator() {
         if (mReader == null) {
             throw new IllegalStateException("File reader is closed");
         }
@@ -154,7 +166,8 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
      * @param fileSpan The file span.
      * @return An iterator over the given file span.
      */
-    public CloseableIterator<SAMRecord> getIterator(final SAMFileSpan fileSpan) {
+    @Override
+	public CloseableIterator<SAMRecord> getIterator(final SAMFileSpan fileSpan) {
         throw new UnsupportedOperationException("Cannot directly iterate over regions within SAM text files.");
     }
 
@@ -162,7 +175,8 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
      * Generally gets a pointer to the first read in the file.  Unsupported for SAMTextReaders.
      * @return An pointer to the first read in the file.
      */
-    public SAMFileSpan getFilePointerSpanningReads() {
+    @Override
+	public SAMFileSpan getFilePointerSpanningReads() {
         throw new UnsupportedOperationException("Cannot retrieve file pointers within SAM text files.");
     }
 
@@ -181,11 +195,13 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
     /**
      * Unsupported for SAM text files.
      */
-    public CloseableIterator<SAMRecord> queryAlignmentStart(final String sequence, final int start) {
+    @Override
+	public CloseableIterator<SAMRecord> queryAlignmentStart(final String sequence, final int start) {
         throw new UnsupportedOperationException("Cannot query SAM text files");
     }
 
-    public CloseableIterator<SAMRecord> queryUnmapped() {
+    @Override
+	public CloseableIterator<SAMRecord> queryUnmapped() {
         throw new UnsupportedOperationException("Cannot query SAM text files");
     }
 
@@ -219,15 +235,18 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
             }
         }
 
-        public void close() {
+        @Override
+		public void close() {
             SAMTextReader.this.close();
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return mCurrentLine != null;
         }
 
-        public SAMRecord next() {
+        @Override
+		public SAMRecord next() {
             if (!hasNext()) {
                 throw new IllegalStateException("Cannot call next() on exhausted iterator");
             }
@@ -238,7 +257,8 @@ class SAMTextReader extends SAMFileReader.ReaderImplementation {
             }
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException("Not supported: remove");
         }
 
