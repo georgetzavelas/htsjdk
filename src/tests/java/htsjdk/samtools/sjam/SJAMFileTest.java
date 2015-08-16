@@ -1,73 +1,65 @@
 package htsjdk.samtools.sjam;
 
 import htsjdk.samtools.SAMFileReader;
+import htsjdk.samtools.SAMFileWriter;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.sjam.SjamFileRecord.SubSeqOf_alignment;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerVisibleString;
 import org.testng.annotations.Test;
 
 public class SJAMFileTest {
-	public static final String INPUT = "c:\\temp\\sim_reads_aligned.sam";
-	public static final String OUTPUT = "c:\\temp\\sim_reads_aligned.sjam";
-	
+	public static final String INPUT_SAM = "c:\\work\\sjam\\samples\\sim_reads_aligned.sam";
+	public static final String OUTPUT_SJAM = "c:\\work\\sjam\\samples\\sim_reads_aligned.sjam";
+    public static final String INPUT_SJAM = OUTPUT_SJAM;
+    public static final String OUTPUT_SAM = INPUT_SAM;
+
 	@Test
-	public void testDoWork() {
-        final SAMFileReader reader = new SAMFileReader(new File(INPUT));
+	public void testWrite() {
+        final SAMFileReader reader = new SAMFileReader(new File(INPUT_SAM));
 //        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), true, OUTPUT);
         SJAMFileWriter writer = null;
 		try {
-			writer = new SJAMFileWriter(new File(OUTPUT));
+			writer = new SJAMFileWriter(new File(OUTPUT_SJAM));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-        List<Alignment> alignmentList = new ArrayList<Alignment>();
+        List<Alignment> alignmentList = new ArrayList<>();
         Header header = new Header();
         
         for (final SAMRecord rec : reader) {
         	/* Alignment record */
         	Alignment alignment = new Alignment();
-        	alignment.qname = new BerVisibleString(rec.getReadName());
+        	alignment.qname = new BerVisibleCompressedString(rec.getReadName());
         	alignment.flag = new BerInteger(rec.getFlags());
-        	alignment.rname = new BerVisibleString(rec.getReferenceName());
+        	alignment.rname = new BerVisibleCompressedString(rec.getReferenceName());
         	alignment.pos = new BerInteger(rec.getAlignmentStart());
         	alignment.mapq = new BerInteger(rec.getMappingQuality());
-        	alignment.cigar = new BerVisibleString(rec.getCigarString());
+        	alignment.cigar = new BerVisibleCompressedString(rec.getCigarString());
         	if (rec.getReferenceName() == rec.getMateReferenceName() &&
         			SAMRecord.NO_ALIGNMENT_REFERENCE_NAME != rec.getReferenceName()) {
-        		alignment.rnext = new BerVisibleString("=");
+        		alignment.rnext = new BerVisibleCompressedString("=");
         	} else {
-            	alignment.rnext = new BerVisibleString(rec.getMateReferenceName());
+            	alignment.rnext = new BerVisibleCompressedString(rec.getMateReferenceName());
         	}
         	alignment.pnext = new BerInteger(rec.getMateAlignmentStart());
         	alignment.tlen = new BerInteger(rec.getInferredInsertSize());
-        	alignment.seq = new BerVisibleString(rec.getReadString());
-        	alignment.qual = new BerVisibleString(rec.getBaseQualityString());
-//          SAMBinaryTagAndValue attribute = alignment.getBinaryAttributes();
-//          while (attribute != null) {
-//              out.write(FIELD_SEPARATOR);
-//              final String encodedTag;
-//              if (attribute.isUnsignedArray()) {
-//                  encodedTag = tagCodec.encodeUnsignedArray(tagUtil.makeStringTag(attribute.tag), attribute.value);
-//              } else {
-//                  encodedTag = tagCodec.encode(tagUtil.makeStringTag(attribute.tag), attribute.value);
-//              }
-//              out.write(encodedTag);
-//              attribute = attribute.getNext();
-//          }
+        	alignment.seq = new BerVisibleCompressedString(rec.getReadString());
+        	alignment.qual = new BerVisibleCompressedString(rec.getBaseQualityString());
         	alignmentList.add(alignment);
         }
 
-		SjamFileRecord sjamFileRecord = new SjamFileRecord(header, new SubSeqOf_alignment(alignmentList));
+		SjamFileRecord sjamFileRecord = new SjamFileRecord(null, new SubSeqOf_alignment(alignmentList));
 		writer.writeRecord(sjamFileRecord);
-        	
+
 		reader.close();
         try {
 			writer.close();
@@ -76,57 +68,64 @@ public class SJAMFileTest {
 		}
     }
 
-//    /**
-//     * Write the record.
-//     *
-//     * @param alignment SAMRecord.
-//     */
-//    public void writeAlignment(final SAMRecord alignment) {
-//        try {
-//            out.write(alignment.getReadName());
-//            out.write(FIELD_SEPARATOR);
-//            out.write(Integer.toString(alignment.getFlags()));
-//            out.write(FIELD_SEPARATOR);
-//            out.write(alignment.getReferenceName());
-//            out.write(FIELD_SEPARATOR);
-//            out.write(Integer.toString(alignment.getAlignmentStart()));
-//            out.write(FIELD_SEPARATOR);
-//            out.write(Integer.toString(alignment.getMappingQuality()));
-//            out.write(FIELD_SEPARATOR);
-//            out.write(alignment.getCigarString());
-//            out.write(FIELD_SEPARATOR);
+    @Test
+	public void testRead() throws IOException {
+//		final SAMFileWriter writer = new SAMFileWriter(new File(OUTPUT_SAM));
+        SJAMFileReader reader = null;
+        try {
+            reader = new SJAMFileReader(new File(INPUT_SJAM));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        SjamFileRecord sjamFileRecord = reader.readRecord();
+        System.out.println(sjamFileRecord.header);
+
+//        List<Alignment> alignmentList = new ArrayList<>();
+//        Header header = new Header();
 //
-//            //  == is OK here because these strings are interned
-//            if (alignment.getReferenceName() == alignment.getMateReferenceName() &&
-//                    SAMRecord.NO_ALIGNMENT_REFERENCE_NAME != alignment.getReferenceName()) {
-//                out.write("=");
+//        for (final SAMRecord rec : reader) {
+//        	/* Alignment record */
+//            Alignment alignment = new Alignment();
+//            alignment.qname = new BerVisibleCompressedString(rec.getReadName());
+//            alignment.flag = new BerInteger(rec.getFlags());
+//            alignment.rname = new BerVisibleCompressedString(rec.getReferenceName());
+//            alignment.pos = new BerInteger(rec.getAlignmentStart());
+//            alignment.mapq = new BerInteger(rec.getMappingQuality());
+//            alignment.cigar = new BerVisibleCompressedString(rec.getCigarString());
+//            if (rec.getReferenceName() == rec.getMateReferenceName() &&
+//                    SAMRecord.NO_ALIGNMENT_REFERENCE_NAME != rec.getReferenceName()) {
+//                alignment.rnext = new BerVisibleCompressedString("=");
 //            } else {
-//                out.write(alignment.getMateReferenceName());
+//                alignment.rnext = new BerVisibleCompressedString(rec.getMateReferenceName());
 //            }
-//            out.write(FIELD_SEPARATOR);
-//            out.write(Integer.toString(alignment.getMateAlignmentStart()));
-//            out.write(FIELD_SEPARATOR);
-//            out.write(Integer.toString(alignment.getInferredInsertSize()));
-//            out.write(FIELD_SEPARATOR);
-//            out.write(alignment.getReadString());
-//            out.write(FIELD_SEPARATOR);
-//            out.write(alignment.getBaseQualityString());
-//            SAMBinaryTagAndValue attribute = alignment.getBinaryAttributes();
-//            while (attribute != null) {
-//                out.write(FIELD_SEPARATOR);
-//                final String encodedTag;
-//                if (attribute.isUnsignedArray()) {
-//                    encodedTag = tagCodec.encodeUnsignedArray(tagUtil.makeStringTag(attribute.tag), attribute.value);
-//                } else {
-//                    encodedTag = tagCodec.encode(tagUtil.makeStringTag(attribute.tag), attribute.value);
-//                }
-//                out.write(encodedTag);
-//                attribute = attribute.getNext();
-//            }
-//            out.write("\n");
-//
-//        } catch (IOException e) {
-//            throw new RuntimeIOException(e);
+//            alignment.pnext = new BerInteger(rec.getMateAlignmentStart());
+//            alignment.tlen = new BerInteger(rec.getInferredInsertSize());
+//            alignment.seq = new BerVisibleCompressedString(rec.getReadString());
+//            alignment.qual = new BerVisibleCompressedString(rec.getBaseQualityString());
+//            alignmentList.add(alignment);
 //        }
-//    }
+//
+//        SjamFileRecord sjamFileRecord = new SjamFileRecord(header, new SubSeqOf_alignment(alignmentList));
+//        writer.writeRecord(sjamFileRecord);
+
+        reader.close();
+//        try {
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+	}
+
+    @Test
+    public void testCompression() throws IOException {
+        String test = "This is a test!";
+        BerByteArrayOutputStream bos = new BerByteArrayOutputStream(100);
+        BerVisibleCompressedString bvcsEncoder = new BerVisibleCompressedString(test);
+        int encodeCount = bvcsEncoder.encode(bos, true);
+        BerVisibleCompressedString bvcsDecoder = new BerVisibleCompressedString();
+        int decodeCount = bvcsDecoder.decode(new ByteArrayInputStream(bos.getArray()), true);
+        System.out.println("Origninal:" + test);
+        System.out.println("Decoded:" + bvcsDecoder.toString());
+    }
 }

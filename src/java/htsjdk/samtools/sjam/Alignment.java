@@ -18,27 +18,27 @@ public final class Alignment {
 	protected BerIdentifier id;
 
 	public byte[] code = null;
-	public BerVisibleString qname = null;
+	public BerVisibleCompressedString qname = null;
 
 	public BerInteger flag = null;
 
-	public BerVisibleString rname = null;
+	public BerVisibleCompressedString rname = null;
 
 	public BerInteger pos = null;
 
 	public BerInteger mapq = null;
 
-	public BerVisibleString cigar = null;
+	public BerVisibleCompressedString cigar = null;
 
-	public BerVisibleString rnext = null;
+	public BerVisibleCompressedString rnext = null;
 
 	public BerInteger pnext = null;
 
 	public BerInteger tlen = null;
 
-	public BerVisibleString seq = null;
+	public BerVisibleCompressedString seq = null;
 
-	public BerVisibleString qual = null;
+	public BerVisibleCompressedString qual = null;
 
 	public Alignment() {
 		id = identifier;
@@ -49,7 +49,7 @@ public final class Alignment {
 		this.code = code;
 	}
 
-	public Alignment(BerVisibleString qname, BerInteger flag, BerVisibleString rname, BerInteger pos, BerInteger mapq, BerVisibleString cigar, BerVisibleString rnext, BerInteger pnext, BerInteger tlen, BerVisibleString seq, BerVisibleString qual) {
+	public Alignment(BerVisibleCompressedString qname, BerInteger flag, BerVisibleCompressedString rname, BerInteger pos, BerInteger mapq, BerVisibleCompressedString cigar, BerVisibleCompressedString rnext, BerInteger pnext, BerInteger tlen, BerVisibleCompressedString seq, BerVisibleCompressedString qual) {
 		id = identifier;
 		this.qname = qname;
 		this.flag = flag;
@@ -128,8 +128,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				qname = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				qname = new BerVisibleCompressedString();
 				subCodeLength += qname.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -156,8 +156,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				rname = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				rname = new BerVisibleCompressedString();
 				subCodeLength += rname.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -198,8 +198,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				cigar = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				cigar = new BerVisibleCompressedString();
 				subCodeLength += cigar.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -212,8 +212,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				rnext = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				rnext = new BerVisibleCompressedString();
 				subCodeLength += rnext.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -254,8 +254,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				seq = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				seq = new BerVisibleCompressedString();
 				subCodeLength += seq.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -268,8 +268,8 @@ public final class Alignment {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				qual = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				qual = new BerVisibleCompressedString();
 				subCodeLength += qual.decode(iStream, false);
 				decodedIdentifier = false;
 			}

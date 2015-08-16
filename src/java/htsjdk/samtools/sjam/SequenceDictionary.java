@@ -18,17 +18,17 @@ public final class SequenceDictionary {
 	protected BerIdentifier id;
 
 	public byte[] code = null;
-	public BerVisibleString sequenceName = null;
+	public BerVisibleCompressedString sequenceName = null;
 
 	public BerInteger sequenceLength = null;
 
-	public BerVisibleString assemblyIdentifier = null;
+	public BerVisibleCompressedString assemblyIdentifier = null;
 
 	public BerOctetString checksum = null;
 
-	public BerVisibleString species = null;
+	public BerVisibleCompressedString species = null;
 
-	public BerVisibleString uri = null;
+	public BerVisibleCompressedString uri = null;
 
 	public SequenceDictionary() {
 		id = identifier;
@@ -39,7 +39,7 @@ public final class SequenceDictionary {
 		this.code = code;
 	}
 
-	public SequenceDictionary(BerVisibleString sequenceName, BerInteger sequenceLength, BerVisibleString assemblyIdentifier, BerOctetString checksum, BerVisibleString species, BerVisibleString uri) {
+	public SequenceDictionary(BerVisibleCompressedString sequenceName, BerInteger sequenceLength, BerVisibleCompressedString assemblyIdentifier, BerOctetString checksum, BerVisibleCompressedString species, BerVisibleCompressedString uri) {
 		id = identifier;
 		this.sequenceName = sequenceName;
 		this.sequenceLength = sequenceLength;
@@ -111,8 +111,8 @@ public final class SequenceDictionary {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				sequenceName = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				sequenceName = new BerVisibleCompressedString();
 				subCodeLength += sequenceName.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -139,8 +139,8 @@ public final class SequenceDictionary {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				assemblyIdentifier = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				assemblyIdentifier = new BerVisibleCompressedString();
 				subCodeLength += assemblyIdentifier.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -161,8 +161,8 @@ public final class SequenceDictionary {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				species = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				species = new BerVisibleCompressedString();
 				subCodeLength += species.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -172,8 +172,8 @@ public final class SequenceDictionary {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				uri = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				uri = new BerVisibleCompressedString();
 				subCodeLength += uri.decode(iStream, false);
 				decodedIdentifier = false;
 			}

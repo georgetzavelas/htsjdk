@@ -66,6 +66,10 @@ class SJAMFileWriter implements Closeable {
     public void writeRecord(final SjamFileRecord sjamFileRecord) {
     	try {
 			sjamFileRecord.encode(berByteArrayOutputStream, false);
+            FileOutputStream fos = new FileOutputStream(path);
+            fos.write(berByteArrayOutputStream.getArray());
+            fos.flush();
+            fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

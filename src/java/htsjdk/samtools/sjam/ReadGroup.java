@@ -18,29 +18,29 @@ public final class ReadGroup {
 	protected BerIdentifier id;
 
 	public byte[] code = null;
-	public BerVisibleString identity = null;
+	public BerVisibleCompressedString identity = null;
 
-	public BerVisibleString centerName = null;
+	public BerVisibleCompressedString centerName = null;
 
-	public BerVisibleString description = null;
+	public BerVisibleCompressedString description = null;
 
-	public BerVisibleString date = null;
+	public BerVisibleCompressedString date = null;
 
-	public BerVisibleString flowOrder = null;
+	public BerVisibleCompressedString flowOrder = null;
 
-	public BerVisibleString keySequence = null;
+	public BerVisibleCompressedString keySequence = null;
 
-	public BerVisibleString library = null;
+	public BerVisibleCompressedString library = null;
 
-	public BerVisibleString program = null;
+	public BerVisibleCompressedString program = null;
 
 	public BerInteger predictedMedianInsertSize = null;
 
 	public Platform platform = null;
 
-	public BerVisibleString platformUnit = null;
+	public BerVisibleCompressedString platformUnit = null;
 
-	public BerVisibleString sample = null;
+	public BerVisibleCompressedString sample = null;
 
 	public ReadGroup() {
 		id = identifier;
@@ -51,7 +51,7 @@ public final class ReadGroup {
 		this.code = code;
 	}
 
-	public ReadGroup(BerVisibleString identity, BerVisibleString centerName, BerVisibleString description, BerVisibleString date, BerVisibleString flowOrder, BerVisibleString keySequence, BerVisibleString library, BerVisibleString program, BerInteger predictedMedianInsertSize, Platform platform, BerVisibleString platformUnit, BerVisibleString sample) {
+	public ReadGroup(BerVisibleCompressedString identity, BerVisibleCompressedString centerName, BerVisibleCompressedString description, BerVisibleCompressedString date, BerVisibleCompressedString flowOrder, BerVisibleCompressedString keySequence, BerVisibleCompressedString library, BerVisibleCompressedString program, BerInteger predictedMedianInsertSize, Platform platform, BerVisibleCompressedString platformUnit, BerVisibleCompressedString sample) {
 		id = identifier;
 		this.identity = identity;
 		this.centerName = centerName;
@@ -155,8 +155,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				identity = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				identity = new BerVisibleCompressedString();
 				subCodeLength += identity.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -169,8 +169,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				centerName = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				centerName = new BerVisibleCompressedString();
 				subCodeLength += centerName.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -180,8 +180,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				description = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				description = new BerVisibleCompressedString();
 				subCodeLength += description.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -191,8 +191,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				date = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				date = new BerVisibleCompressedString();
 				subCodeLength += date.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -202,8 +202,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				flowOrder = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				flowOrder = new BerVisibleCompressedString();
 				subCodeLength += flowOrder.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -213,8 +213,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				keySequence = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				keySequence = new BerVisibleCompressedString();
 				subCodeLength += keySequence.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -224,8 +224,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				library = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				library = new BerVisibleCompressedString();
 				subCodeLength += library.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -235,8 +235,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				program = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				program = new BerVisibleCompressedString();
 				subCodeLength += program.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -269,8 +269,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				platformUnit = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				platformUnit = new BerVisibleCompressedString();
 				subCodeLength += platformUnit.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -280,8 +280,8 @@ public final class ReadGroup {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				sample = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				sample = new BerVisibleCompressedString();
 				subCodeLength += sample.decode(iStream, false);
 				decodedIdentifier = false;
 			}

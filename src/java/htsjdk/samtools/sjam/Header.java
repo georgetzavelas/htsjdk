@@ -260,7 +260,7 @@ public final class Header {
 		protected BerIdentifier id;
 
 		public byte[] code = null;
-		public List<BerVisibleString> seqOf = null;
+		public List<BerVisibleCompressedString> seqOf = null;
 
 		public SubSeqOf_textComment() {
 			id = identifier;
@@ -271,7 +271,7 @@ public final class Header {
 			this.code = code;
 		}
 
-		public SubSeqOf_textComment(List<BerVisibleString> seqOf) {
+		public SubSeqOf_textComment(List<BerVisibleCompressedString> seqOf) {
 			id = identifier;
 			this.seqOf = seqOf;
 		}
@@ -305,7 +305,7 @@ public final class Header {
 		public int decode(InputStream iStream, boolean explicit) throws IOException {
 			int codeLength = 0;
 			int subCodeLength = 0;
-			seqOf = new LinkedList<BerVisibleString>();
+			seqOf = new LinkedList<BerVisibleCompressedString>();
 
 			if (explicit) {
 				codeLength += id.decodeAndCheck(iStream);
@@ -315,7 +315,7 @@ public final class Header {
 			codeLength += length.decode(iStream);
 
 			while (subCodeLength < length.val) {
-				BerVisibleString element = new BerVisibleString();
+				BerVisibleCompressedString element = new BerVisibleCompressedString();
 				subCodeLength += element.decode(iStream, true);
 				seqOf.add(element);
 			}

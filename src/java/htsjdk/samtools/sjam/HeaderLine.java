@@ -18,7 +18,7 @@ public final class HeaderLine {
 	protected BerIdentifier id;
 
 	public byte[] code = null;
-	public BerVisibleString version = null;
+	public BerVisibleCompressedString version = null;
 
 	public SortingOrder sortingOrder = null;
 
@@ -31,7 +31,7 @@ public final class HeaderLine {
 		this.code = code;
 	}
 
-	public HeaderLine(BerVisibleString version, SortingOrder sortingOrder) {
+	public HeaderLine(BerVisibleCompressedString version, SortingOrder sortingOrder) {
 		id = identifier;
 		this.version = version;
 		this.sortingOrder = sortingOrder;
@@ -85,8 +85,8 @@ public final class HeaderLine {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				version = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				version = new BerVisibleCompressedString();
 				subCodeLength += version.decode(iStream, false);
 				decodedIdentifier = false;
 			}

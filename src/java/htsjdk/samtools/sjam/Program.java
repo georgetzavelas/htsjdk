@@ -18,17 +18,17 @@ public final class Program {
 	protected BerIdentifier id;
 
 	public byte[] code = null;
-	public BerVisibleString identity = null;
+	public BerVisibleCompressedString identity = null;
 
-	public BerVisibleString programName = null;
+	public BerVisibleCompressedString programName = null;
 
-	public BerVisibleString commandLine = null;
+	public BerVisibleCompressedString commandLine = null;
 
-	public BerVisibleString previousPgTag = null;
+	public BerVisibleCompressedString previousPgTag = null;
 
-	public BerVisibleString description = null;
+	public BerVisibleCompressedString description = null;
 
-	public BerVisibleString programVersion = null;
+	public BerVisibleCompressedString programVersion = null;
 
 	public Program() {
 		id = identifier;
@@ -39,7 +39,7 @@ public final class Program {
 		this.code = code;
 	}
 
-	public Program(BerVisibleString identity, BerVisibleString programName, BerVisibleString commandLine, BerVisibleString previousPgTag, BerVisibleString description, BerVisibleString programVersion) {
+	public Program(BerVisibleCompressedString identity, BerVisibleCompressedString programName, BerVisibleCompressedString commandLine, BerVisibleCompressedString previousPgTag, BerVisibleCompressedString description, BerVisibleCompressedString programVersion) {
 		id = identifier;
 		this.identity = identity;
 		this.programName = programName;
@@ -113,8 +113,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				identity = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				identity = new BerVisibleCompressedString();
 				subCodeLength += identity.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -127,8 +127,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				programName = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				programName = new BerVisibleCompressedString();
 				subCodeLength += programName.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -138,8 +138,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				commandLine = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				commandLine = new BerVisibleCompressedString();
 				subCodeLength += commandLine.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -149,8 +149,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				previousPgTag = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				previousPgTag = new BerVisibleCompressedString();
 				subCodeLength += previousPgTag.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -160,8 +160,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				description = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				description = new BerVisibleCompressedString();
 				subCodeLength += description.decode(iStream, false);
 				decodedIdentifier = false;
 			}
@@ -171,8 +171,8 @@ public final class Program {
 				subCodeLength += berIdentifier.decode(iStream);
 				decodedIdentifier = true;
 			}
-			if (berIdentifier.equals(BerVisibleString.identifier)) {
-				programVersion = new BerVisibleString();
+			if (berIdentifier.equals(BerVisibleCompressedString.identifier)) {
+				programVersion = new BerVisibleCompressedString();
 				subCodeLength += programVersion.decode(iStream, false);
 				decodedIdentifier = false;
 			}
